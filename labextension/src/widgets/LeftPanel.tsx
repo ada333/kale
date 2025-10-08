@@ -317,13 +317,15 @@ export class KubeflowKaleLeftPanel extends React.Component<IProps, IState> {
   };
 
   updateDeployProgress = (index: number, progress: DeployProgressState) => {
-    let deploy: { [index: number]: DeployProgressState };
-    if (!this.state.deploys[index]) {
-      deploy = { [index]: progress };
-    } else {
-      deploy = { [index]: { ...this.state.deploys[index], ...progress } };
-    }
-    this.setState({ deploys: { ...this.state.deploys, ...deploy } });
+    this.setState(prevState => {
+      let deploy: { [index: number]: DeployProgressState };
+      if (!prevState.deploys[index]) {
+        deploy = { [index]: progress };
+      } else {
+        deploy = { [index]: { ...prevState.deploys[index], ...progress } };
+      }
+      return { deploys: { ...prevState.deploys, ...deploy } };
+    });
   };
 
   onPanelRemove = (index: number) => {
@@ -380,7 +382,7 @@ export class KubeflowKaleLeftPanel extends React.Component<IProps, IState> {
       return;
     }
     _updateDeployProgress({
-      message: 'Validation completed successfully'
+      message: 'Validation completed successfully',
     });
 
     // CREATE PIPELINE
@@ -396,7 +398,7 @@ export class KubeflowKaleLeftPanel extends React.Component<IProps, IState> {
       return;
     }
     _updateDeployProgress({
-      message: 'Notebook compiled successfully'
+      message: 'Notebook compiled successfully',
     });
 
     // UPLOAD
