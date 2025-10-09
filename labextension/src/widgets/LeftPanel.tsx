@@ -382,7 +382,7 @@ export class KubeflowKaleLeftPanel extends React.Component<IProps, IState> {
       return;
     }
     _updateDeployProgress({
-      message: 'Validation completed successfully',
+      message: 'Validation completed successfully'
     });
 
     // CREATE PIPELINE
@@ -398,7 +398,7 @@ export class KubeflowKaleLeftPanel extends React.Component<IProps, IState> {
       return;
     }
     _updateDeployProgress({
-      message: 'Notebook compiled successfully',
+      message: 'Notebook compiled successfully'
     });
 
     // UPLOAD
