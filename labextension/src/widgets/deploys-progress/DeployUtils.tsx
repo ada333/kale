@@ -51,7 +51,7 @@ export default class DeployUtils {
     canceled: '#ff992a'
   };
 
-  public static getInfoBadge(title: string, content: any) {
+  public static getInfoBadge(title: string, content: string[]) {
     return (
       content && (
         <a
@@ -65,7 +65,7 @@ export default class DeployUtils {
     );
   }
 
-  public static getWarningBadge(title: string, content: any) {
+  public static getWarningBadge(title: string, content: string[]) {
     return (
       content && (
         <a

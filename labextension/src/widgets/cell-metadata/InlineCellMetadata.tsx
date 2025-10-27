@@ -15,7 +15,7 @@
  */
 
 import * as React from 'react';
-import { Notebook, NotebookPanel } from '@jupyterlab/notebook';
+import { CellList, Notebook, NotebookPanel } from '@jupyterlab/notebook';
 import { DocumentRegistry } from '@jupyterlab/docregistry';
 import { IObservableList } from '@jupyterlab/observables';
 import {
@@ -139,7 +139,7 @@ export class InlineCellsMetadata extends React.Component<IProps, IState> {
   };
 
   handleCellChange = (
-    cells: any,
+    cells: CellList,
     args: IObservableList.IChangedArgs<ICellModel>
   ) => {
     this.refreshEditorsPropsAndInlineMetadata();
