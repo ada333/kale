@@ -23,6 +23,11 @@ If you're running JupyterLab inside a Kubeflow notebook server, click
 **Select from notebook** to see volumes already mounted on your notebook pod.
 This makes it easy to use the same volumes in your pipeline.
 
+> **Warning:** The notebook still holds these volumes while it is running.
+> Pipeline pods may fail to mount **RWO** volumes unless they land on the
+> same node (Kale does not guarantee that). **RWOP** cannot be shared until
+> the notebook is stopped.
+
 ### Access Mode Badges
 
 Each PVC in the dropdown shows its access mode:

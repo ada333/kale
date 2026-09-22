@@ -135,6 +135,15 @@ export const NotebookVolumesDialog: React.FC<INotebookVolumesDialogProps> = ({
       </DialogTitle>
 
       <DialogContent dividers>
+        <Typography
+          variant="caption"
+          className="kale-volume-warning"
+          sx={{ mb: 1, display: 'block', pl: 0 }}
+        >
+          Warning: this notebook is still mounting these volumes. Pipeline pods
+          may fail to attach RWO volumes unless they run on the same node, and
+          RWOP volumes until the notebook is stopped.
+        </Typography>
         {loading ? (
           <div className="kale-dialog-loading">
             <CircularProgress size={24} />
