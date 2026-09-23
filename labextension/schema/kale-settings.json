@@ -26,7 +26,7 @@
       "type": "boolean",
       "title": "Enable volumes / PVC panel",
       "description": "Show the Volumes section in the Kale sidebar, allowing PVCs to be mounted into pipeline steps. Disable to hide the PVC panel.",
-      "default": true
+      "default": false
     },
     "defaultBaseImage": {
       "type": "string",
