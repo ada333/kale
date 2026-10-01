@@ -104,10 +104,6 @@ export default class Commands {
     experiment: { id: string; name: string },
     experimentName: string,
   ) => {
-    // Use silent error handling: this is a background call that runs on every
-    // notebook open, including before the user has enabled Kale. A missing KFP
-    // connection must not produce a blocking dialog — the status badge already
-    // communicates that state. Errors are logged to console only.
     let fetchedList: IExperiment[] | null = null;
     try {
       fetchedList = await _legacy_executeRpc(
@@ -320,8 +316,6 @@ export default class Commands {
   };
 
   resumeStateIfExploreNotebook = async (notebookPath: string) => {
-    // Background call on every notebook open — must not produce a popup on
-    // failure (e.g. when KFP / the kernel is unavailable). Log silently.
     let exploration: any = null;
     try {
       exploration = await _legacy_executeRpc(
