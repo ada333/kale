@@ -104,12 +104,22 @@ export default class Commands {
     experiment: { id: string; name: string },
     experimentName: string,
   ) => {
-    let experimentsList: IExperiment[] = await _legacy_executeRpcAndShowRPCError(
-      this._notebook,
-      this._kernel,
-      'kfp.list_experiments',
-    );
-    if (experimentsList) {
+    // Use silent error handling: this is a background call that runs on every
+    // notebook open, including before the user has enabled Kale. A missing KFP
+    // connection must not produce a blocking dialog — the status badge already
+    // communicates that state. Errors are logged to console only.
+    let fetchedList: IExperiment[] | null = null;
+    try {
+      fetchedList = await _legacy_executeRpc(
+        this._notebook,
+        this._kernel,
+        'kfp.list_experiments',
+      );
+    } catch (error) {
+      console.warn('Could not fetch KFP experiments, KFP may not be available.', error);
+    }
+    let experimentsList: IExperiment[] = fetchedList ?? [];
+    if (experimentsList.length > 0) {
       experimentsList.push(NEW_EXPERIMENT);
     } else {
       experimentsList = [NEW_EXPERIMENT];
@@ -310,12 +320,20 @@ export default class Commands {
   };
 
   resumeStateIfExploreNotebook = async (notebookPath: string) => {
-    const exploration = await _legacy_executeRpcAndShowRPCError(
-      this._notebook,
-      this._kernel,
-      'nb.explore_notebook',
-      { source_notebook_path: notebookPath },
-    );
+    // Background call on every notebook open — must not produce a popup on
+    // failure (e.g. when KFP / the kernel is unavailable). Log silently.
+    let exploration: any = null;
+    try {
+      exploration = await _legacy_executeRpc(
+        this._notebook,
+        this._kernel,
+        'nb.explore_notebook',
+        { source_notebook_path: notebookPath },
+      );
+    } catch (error) {
+      console.warn('Could not check notebook exploration state.', error);
+      return;
+    }
 
     if (!exploration || !exploration.is_exploration) {
       return;
@@ -348,14 +366,18 @@ export default class Commands {
       ];
     }
     await NotebookUtils.showMessage(title, message);
-    await _legacy_executeRpcAndShowRPCError(
-      this._notebook,
-      this._kernel,
-      'nb.remove_marshal_dir',
-      {
-        source_notebook_path: notebookPath,
-      },
-    );
+    try {
+      await _legacy_executeRpc(
+        this._notebook,
+        this._kernel,
+        'nb.remove_marshal_dir',
+        {
+          source_notebook_path: notebookPath,
+        },
+      );
+    } catch (error) {
+      console.warn('Could not remove marshal dir.', error);
+    }
   };
 
   findPodDefaultLabelsOnServer = async (): Promise<{
