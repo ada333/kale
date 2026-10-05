@@ -45,14 +45,14 @@ def list_experiments(request):
     """
     try:
         c = _get_client()
+        experiments = [
+            {"name": exp.display_name, "id": exp.experiment_id}
+            for exp in c.list_experiments().experiments or []
+        ]
+        return experiments
     except Exception as e:
         log.warning("KFP not reachable, returning empty experiments list: %s", e)
         return []
-    experiments = [
-        {"name": e.display_name, "id": e.experiment_id}
-        for e in c.list_experiments().experiments or []
-    ]
-    return experiments
 
 
 def get_ui_host(request):

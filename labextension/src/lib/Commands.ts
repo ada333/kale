@@ -17,6 +17,7 @@ import { NotebookPanel } from '@jupyterlab/notebook';
 import {
   _legacy_executeRpc,
   _legacy_executeRpcAndShowRPCError,
+  BaseError,
 } from './RPCUtils';
 
 import { DeployProgressState, RunPipeline } from '../widgets/deploys-progress/DeployProgress';
@@ -325,7 +326,11 @@ export default class Commands {
         { source_notebook_path: notebookPath },
       );
     } catch (error) {
-      console.warn('Could not check notebook exploration state.', error);
+      if (error instanceof BaseError) {
+        console.error('Kernel/backend unavailable, cannot check exploration state:', error);
+      } else {
+        console.warn('Could not check notebook exploration state.', error);
+      }
       return;
     }
 
@@ -370,7 +375,11 @@ export default class Commands {
         },
       );
     } catch (error) {
-      console.warn('Could not remove marshal dir.', error);
+      if (error instanceof BaseError) {
+        console.error('Kernel/backend unavailable, cannot remove marshal dir:', error);
+      } else {
+        console.warn('Could not remove marshal dir.', error);
+      }
     }
   };
 
